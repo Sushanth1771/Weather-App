@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'weather/weather.css' %}">
+</head>
+<body>
+    <div class="container my-5 mx-auto">
+        <h1 class="text-light text-center text-decoration-none">Weather App🌤</h1>
+        <form  class="change-location my-4 text-center text-success font-weight-bold" method="POST">
+            {% csrf_token %}
+            <label>
+                Enter the Location to get Weather information
+            </label>
+            {{ form.name }}
+            <br><br>
+            <button type="submit" class="button is-info font-weight-bold">
+                Add City
+            </button>
+            {% if message %}
+                <div class="notification {{ message_class }}">{{ message }}<button class="del-msg delete" onclick="document.getElementsByClassName('notification')[0].style.display='none'"></button></div>
+            {% endif %}
+        </form >
+    </div>
+    <div class="column is-offset-4 is-4">
+        {% for city_weather in weather_data %}
+        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-50x50">
+                        <img src="http://openweathermap.org/img/w/{{ city_weather.icon }}.png" alt="Image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <span class="title">{{ city_weather.city }}</span>
+                            <br>
+                            <span class="subtitle">{{ city_weather.temperature }}° C</span>
+                            <br> {{ city_weather.description }}
+                        </p>
+                    </div>
+                </div>
+                <div class="media-right">
+                    <a href="{% url 'delete_city' city_weather.city %}">
+                        <button class="delete"></button>
+                    </a>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    <div class="text-center space">
+        <a href="https://github.com/Sushanth1771" class="badge badge-dark"> Designed By Sushanth Inampudi</a>
+    </div>
+</body>
+</html>
